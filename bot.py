@@ -616,7 +616,7 @@ class ModmailBot(Bot):
         if message.content.startswith(prefix):
             cmd = message.content[len(prefix):].strip()
             if cmd in self.snippets:
-                message.content = f'{prefix}reply {self.snippets[cmd]}'
+                message.content = f'{prefix}msg {self.snippets[cmd]}'
 
         ctx = await self.get_context(message)
         if ctx.command:
@@ -624,8 +624,8 @@ class ModmailBot(Bot):
 
         thread = await self.threads.find(channel=ctx.channel)
         if thread is not None:
-            if self.config.get('reply_without_command'):
-                await thread.reply(message)
+            if self.config.get('msg'):
+                await thread.msg(message)
             else:
                 await self.api.append_log(message, type_='internal')
         elif ctx.invoked_with:
